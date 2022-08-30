@@ -13,10 +13,10 @@ inquirer
     },
   ])
   .then((answers) => {
-    if(answers.nome == ''){
+    if(!answers.nome){
         throw new Error(chalk.bgRed("Campo de nome vazio!"))
     }
-    if (answers.idade == "") {
+    if (!answers.idade) {
       throw new Error(chalk.bgRed("Campo de idade vazio!"));
     }
     console.log(chalk.bgYellow.black(`O(A) ${answers.nome} tem ${answers.idade} anos`));
