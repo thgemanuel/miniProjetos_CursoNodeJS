@@ -1,0 +1,7 @@
+com este comando o modulo é instalado como dependencia dev
+ou seja, sao pacotes apenas para o ambiente de desenvolvimento
+neste caso usamos o chalk
+
+com a flag --save-dev esses pacotes sao instalados de forma separada no package.json
+
+npm i --save-dev chalk
