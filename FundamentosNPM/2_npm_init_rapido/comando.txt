@@ -1,0 +1,5 @@
+para criar um projeto rapidamente basta digitar no terminal:
+
+npm init -y
+
+com a flag -y para todas as perguntas sera respondido automaticamente como sim
