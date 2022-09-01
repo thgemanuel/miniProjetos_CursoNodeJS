@@ -1,0 +1,8 @@
+// criando novo script para rodar o projeto lembrando que somente o "start" roda sem precisar do run
+    // assim o comando pra executar o projeto é somente npm start 
+
+no package.json foi acrescentado a linha
+
+    "start": "node index.js"
+
+    
