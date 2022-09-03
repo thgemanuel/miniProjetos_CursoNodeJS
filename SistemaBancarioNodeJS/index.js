@@ -32,7 +32,7 @@ function operacoes() {
       const action = answer["action"];
 
       if (action === "Criar conta") {
-        createAccount();
+        criarConta();
       } else if (action === "Depositar") {
         deposit();
       } else if (action === "Consultar Saldo") {
@@ -47,10 +47,61 @@ function operacoes() {
 }
 
 // funcao para apresentar mensagem de criacao de conta
-function createAccount() {
+function criarConta() {
   console.log(chalk.bgGreen("Bem vindo ao nosso banco!"));
   console.log(chalk.bgCyan("Defina as opções da sua conta a seguir"));
 
   // chamada de funcao para criar conta
-  criarConta();
+  buildConta();
+}
+
+// funcao para criar conta
+function buildConta() {
+  // fazer a requisicao para os dados da conta do usuario
+  inquirer
+    .prompt([
+      {
+        name: "nomeConta",
+        message: "Informe um nome para a sua conta:",
+      },
+    ])
+    .then((answer) => {
+      const nomeConta = answer["nomeConta"];
+      // apresentar para o usuario o nome da conta definido
+      console.info(nomeConta);
+
+      // caso o diretorio nao exista ele é criado
+      if (!fs.existsSync("contas")) {
+        fs.mkdirSync("contas");
+      }
+
+      // se a conta que o usuario informou ja existe,
+      // nao pode deixar a continuacao da criacao de conta com esse nome
+      // é feita uma chamada da funcao para criacao com outro nome
+      // para cada conta serao salvos os dados em arquivo json
+      if (fs.existsSync(`contas/${nomeConta}.json`)) {
+        console.log(
+          chalk.bgRed.black("Conta já existente! Defina outro nome!")
+        );
+
+        // chamada recursiva
+        buildConta(nomeConta);
+        // se tiver um erro no sistema ele é retornado para q nao crie a conta 
+        return
+      }
+
+      // lembrando que todos os processos sao sincronos para respeitar a ordem do programa
+      // nessa funcao é escrito em um arquivo para a nova conta com o saldo predefinido em 0
+      fs.writeFileSync(
+        `contas/${nomeConta}.json`,
+        '{"saldo":0}',
+        function (err) {
+          console.log(err);
+        }
+      );
+
+      console.log(chalk.green("Parabéns, sua conta foi criada!"));
+      // voltar para o menu do usuario
+      operacoes();
+    });
 }
