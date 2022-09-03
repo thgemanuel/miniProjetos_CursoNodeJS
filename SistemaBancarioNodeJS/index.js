@@ -34,13 +34,14 @@ function operacoes() {
       if (action === "Criar conta") {
         criarConta();
       } else if (action === "Depositar") {
-        deposit();
+        depositar();
       } else if (action === "Consultar Saldo") {
-        getAccountBalance();
+        consultarSaldo();
       } else if (action === "Sacar") {
         withdraw();
       } else if (action === "Sair") {
         console.log(chalk.bgBlue.black("Obrigado por usar o Accounts!"));
+        // funcao para encerrar execucao do programa
         process.exit();
       }
     });
@@ -68,7 +69,7 @@ function buildConta() {
     .then((answer) => {
       const nomeConta = answer["nomeConta"];
       // apresentar para o usuario o nome da conta definido
-      console.info(nomeConta);
+      // console.info(nomeConta);
 
       // caso o diretorio nao exista ele é criado
       if (!fs.existsSync("contas")) {
@@ -86,8 +87,8 @@ function buildConta() {
 
         // chamada recursiva
         buildConta(nomeConta);
-        // se tiver um erro no sistema ele é retornado para q nao crie a conta 
-        return
+        // se tiver um erro no sistema ele é retornado para q nao crie a conta
+        return;
       }
 
       // lembrando que todos os processos sao sincronos para respeitar a ordem do programa
@@ -100,8 +101,127 @@ function buildConta() {
         }
       );
 
-      console.log(chalk.green("Parabéns, sua conta foi criada!"));
+      console.log(
+        chalk.bgGreenBright.green(
+          `Parabéns ${nomeConta}, sua conta foi criada!`
+        )
+      );
       // voltar para o menu do usuario
       operacoes();
     });
+}
+
+// funcao para adicionar fundos na conta
+function depositar() {
+  inquirer
+    .prompt([
+      {
+        name: "nomeConta",
+        message: "Informe o nome da sua conta:",
+      },
+    ])
+    .then((answer) => {
+      const nomeConta = answer["nomeConta"];
+
+      // verifica se a conta existe
+      if (!verificaSeContaExiste(nomeConta)) {
+        return depositar();
+      }
+
+      // realizando a requisicao ao usuario do valor do deposito
+      inquirer
+        .prompt([
+          {
+            name: "valor",
+            message: "Informe o valor do deposito:",
+          },
+        ])
+        .then((answer) => {
+          const valor = answer["valor"];
+
+          adicionaFundos(nomeConta, valor);
+          operacoes();
+        });
+    });
+}
+
+// funcao para verificar se conta ja existe no banco
+function verificaSeContaExiste(nomeConta) {
+  if (!fs.existsSync(`contas/${nomeConta}.json`)) {
+    console.log(chalk.bgRed.black("Conta inexistente, verifica os dados"));
+    return false;
+  }
+  return true;
+}
+
+// funcao para ler o arquivo da conta e obter dados
+function leArquivoConta(nomeConta) {
+  // obtem a conta em um objeto JavaScript
+  const contaJSON = fs.readFileSync(`contas/${nomeConta}.json`, {
+    encoding: "utf8", // para poder pegar os padroes utf8
+    flag: "r", // modo somente leitura do arquivo
+  });
+
+  // retorna o objeto JavaScript transformado em um JSON
+  return JSON.parse(contaJSON);
+}
+
+function adicionaFundos(nomeConta, valor) {
+  const dadosConta = leArquivoConta(nomeConta);
+
+  // se nao for informado nenhum valor para deposito, a funcao é chamada novamente para obter valor valido
+  if (!valor) {
+    console.log(
+      chalk.bgRed.black(
+        "Valor de deposito invalido, informe um valor maior que R$ 0!"
+      )
+    );
+    return depositar();
+  }
+
+  // como o require vem em formado de texto é nescessario converter em Float32Array, assim como os dados do JSON
+  dadosConta.saldo = parseFloat(valor) + parseFloat(dadosConta.saldo);
+
+  // salvando os novos dados no arquivo da conta 
+  // para isso é usando a funcao JSON.stringify(dadosConta) para transformar o json em texto 
+  fs.writeFileSync(
+    `contas/${nomeConta}.json`,
+    JSON.stringify(dadosConta),
+    function (err) {
+      console.log(err);
+    }
+  );
+
+  console.log(
+    chalk.green(`${nomeConta}, foi depositado o valor de R$${valor} na sua conta!`)
+  );
+}
+
+// funcao para consulta de saldo
+function consultarSaldo() {
+  // faz a requisicao do nome da conta para ver o saldo 
+  inquirer
+    .prompt([
+      {
+        name: 'nomeConta',
+        message: 'Informe o nome da sua conta:',
+      },
+    ])
+    .then((answer) => {
+      const nomeConta = answer['nomeConta']
+
+      
+      if (!verificaSeContaExiste(nomeConta)) {
+        return consultarSaldo()
+      }
+
+      const dadosConta = getAccount(nomeConta)
+
+      console.log(
+        chalk.bgBlue.black(
+          `Olá ${nomeConta}, o saldo da sua conta é de R$${dadosConta.balance}`
+        )
+      );
+      operacoes()
+    })
 }
