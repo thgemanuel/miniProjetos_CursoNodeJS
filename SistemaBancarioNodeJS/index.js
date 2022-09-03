@@ -40,7 +40,7 @@ function operacoes() {
       } else if (action === "Sacar") {
         sacarValor();
       } else if (action === "Sair") {
-        console.log(chalk.bgBlue.black("Obrigado por usar o Accounts!"));
+        console.log(chalk.bgBlue.black("Obrigado por usar o ThIagú!"));
         // funcao para encerrar execucao do programa
         process.exit();
       }
