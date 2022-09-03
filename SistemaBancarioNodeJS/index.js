@@ -27,7 +27,7 @@ function operacoes() {
     ])
     .then((answer) => {
       //no then ficam as soluççoes da escolha do ususario
-      
+
       //nessa action fica salva a acao seleciona dentra do array de respostas do usuario
       const action = answer["action"];
 
@@ -44,4 +44,13 @@ function operacoes() {
         process.exit();
       }
     });
+}
+
+// funcao para apresentar mensagem de criacao de conta
+function createAccount() {
+  console.log(chalk.bgGreen("Bem vindo ao nosso banco!"));
+  console.log(chalk.bgCyan("Defina as opções da sua conta a seguir"));
+
+  // chamada de funcao para criar conta
+  criarConta();
 }
