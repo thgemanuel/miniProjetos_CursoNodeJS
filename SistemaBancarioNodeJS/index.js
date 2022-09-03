@@ -38,13 +38,14 @@ function operacoes() {
       } else if (action === "Consultar Saldo") {
         consultarSaldo();
       } else if (action === "Sacar") {
-        withdraw();
+        sacarValor();
       } else if (action === "Sair") {
         console.log(chalk.bgBlue.black("Obrigado por usar o Accounts!"));
         // funcao para encerrar execucao do programa
         process.exit();
       }
-    });
+    })
+    .catch((err) => console.log(err));
 }
 
 // funcao para apresentar mensagem de criacao de conta
@@ -108,7 +109,8 @@ function buildConta() {
       );
       // voltar para o menu do usuario
       operacoes();
-    });
+    })
+    .catch((err) => console.log(err));
 }
 
 // funcao para adicionar fundos na conta
@@ -141,8 +143,10 @@ function depositar() {
 
           adicionaFundos(nomeConta, valor);
           operacoes();
-        });
-    });
+        })
+        .catch((err) => console.log(err));
+    })
+    .catch((err) => console.log(err));
 }
 
 // funcao para verificar se conta ja existe no banco
@@ -182,8 +186,8 @@ function adicionaFundos(nomeConta, valor) {
   // como o require vem em formado de texto é nescessario converter em Float32Array, assim como os dados do JSON
   dadosConta.saldo = parseFloat(valor) + parseFloat(dadosConta.saldo);
 
-  // salvando os novos dados no arquivo da conta 
-  // para isso é usando a funcao JSON.stringify(dadosConta) para transformar o json em texto 
+  // salvando os novos dados no arquivo da conta
+  // para isso é usando a funcao JSON.stringify(dadosConta) para transformar o json em texto
   fs.writeFileSync(
     `contas/${nomeConta}.json`,
     JSON.stringify(dadosConta),
@@ -193,35 +197,116 @@ function adicionaFundos(nomeConta, valor) {
   );
 
   console.log(
-    chalk.green(`${nomeConta}, foi depositado o valor de R$${valor} na sua conta!`)
+    chalk.green(
+      `${nomeConta}, foi depositado o valor de R$${valor} na sua conta!`
+    )
   );
 }
 
 // funcao para consulta de saldo
 function consultarSaldo() {
-  // faz a requisicao do nome da conta para ver o saldo 
+  // faz a requisicao do nome da conta para ver o saldo
   inquirer
     .prompt([
       {
-        name: 'nomeConta',
-        message: 'Informe o nome da sua conta:',
+        name: "nomeConta",
+        message: "Informe o nome da sua conta:",
       },
     ])
     .then((answer) => {
-      const nomeConta = answer['nomeConta']
+      const nomeConta = answer["nomeConta"];
 
-      
+      // sempre é interessante ter essa validacao de erro
       if (!verificaSeContaExiste(nomeConta)) {
-        return consultarSaldo()
+        return consultarSaldo();
       }
 
-      const dadosConta = getAccount(nomeConta)
+      const dadosConta = leArquivoConta(nomeConta);
 
       console.log(
         chalk.bgBlue.black(
-          `Olá ${nomeConta}, o saldo da sua conta é de R$${dadosConta.balance}`
+          `Olá ${nomeConta}, o saldo da sua conta é de R$${dadosConta.saldo}`
         )
       );
-      operacoes()
+      operacoes();
     })
+    .catch((err) => console.log(err));
+}
+
+// funcao sacar dinheiro
+function sacarValor() {
+  // solicitando nome da conta
+  inquirer
+    .prompt([
+      {
+        name: "nomeConta",
+        message: "Informe o nome da sua conta:",
+      },
+    ])
+    .then((answer) => {
+      const nomeConta = answer["nomeConta"];
+
+      if (!verificaSeContaExiste(nomeConta)) {
+        return sacarValor();
+      }
+
+      inquirer
+        .prompt([
+          {
+            name: "valor",
+            message: "Informe o valor do saque:",
+          },
+        ])
+        .then((answer) => {
+          const valor = answer["valor"];
+
+          // chamda da funcao para remover valor do saldo
+          removeValorSaldo(nomeConta, valor);
+        })
+        .catch((err) => console.log(err));
+    })
+    .catch((err) => console.log(err));
+}
+
+// funcao para remover valor do saldo da conta
+function removeValorSaldo(nomeConta, valor) {
+  const dadosConta = leArquivoConta(nomeConta);
+
+  // validando se o valor do saque nao é vazio
+  if (!valor) {
+    console.log(
+      chalk.bgRed.black(
+        "Valor de saque invalido, informe um valor maior que R$ 0!"
+      )
+    );
+    return sacarValor();
+  }
+
+  // validando se o valor de saldo é menor que o valor do saque
+  if (dadosConta.saldo < valor) {
+    console.log(
+      chalk.bgRed.black(
+        `Valor indisponível! O seu saldo é de ${dadosConta.saldo}`
+      )
+    );
+    return sacarValor();
+  }
+
+  // salvar na conta o novo valor do saldo
+  dadosConta.saldo = parseFloat(dadosConta.saldo) - parseFloat(valor);
+
+  fs.writeFileSync(
+    `contas/${nomeConta}.json`,
+    JSON.stringify(dadosConta),
+    function (err) {
+      console.log(err);
+    }
+  );
+
+  console.log(
+    chalk.green(
+      `${nomeConta}, foi realizado um saque de R$${valor} da sua conta!`
+    )
+  );
+  operacoes();
 }
