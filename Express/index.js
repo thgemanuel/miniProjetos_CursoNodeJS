@@ -8,12 +8,15 @@ const port = 2000;
 
 const path = require("path");
 
-const users = require("./users")
+const users = require("./users");
+
+// arquivos estaticos (CSS)
+app.use(express.static("public"));
 
 // o __dirname é refente ao diretorio atual
 const basePath = path.join(__dirname, "templates");
 
-app.use('/users', users)
+app.use("/users", users);
 
 // criando middleware para autenticar usuario
 const checkAuth = function (req, res, next) {
@@ -36,8 +39,6 @@ app.use(express.urlencoded({ extended: true }));
 
 // transformando toda requisicao do body é transformado em um json
 app.use(express.json());
-
-
 
 // criar rota
 // requisicao(req) vem do cliente e a resposta(res) é enviada de volta
