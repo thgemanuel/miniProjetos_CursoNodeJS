@@ -3,10 +3,20 @@ const exphbs = require("express-handlebars");
 
 const app = express();
 
+// configurando o diretorio do partials no handlebars
+const hbs = exphbs.create({
+  partialsDir: ["views/partials"],
+});
+
 // Basicamente, precisamos invocar este método engine
 //   para realizar algumas configurações extras,
 //      obrigatório para o funcionamento do pacote
-app.engine("handlebars", exphbs.engine());
+//app.engine("handlebars", exphbs.engine());
+
+// com o Handlebars no comando de engine,
+//    a engine configurada o diretorio é passada
+app.engine("handlebars", hbs.engine);
+
 //instalando handlebars
 app.set("view engine", "handlebars");
 
@@ -25,7 +35,33 @@ app.get("/post", (req, res) => {
     comentarios: 4,
   };
 
-  res.render('blogpost', {post})
+  res.render("blogpost", { post });
+});
+
+// pagina para usar o "partials" que reutilizacao de codigo
+app.get("/blog", (req, res) => {
+  const posts = [
+    {
+      titulo: "Aprendendo Partials 1",
+      categoria: "Partials 1",
+      body: "Este artigo te ensina o Partials 1",
+      comentarios: 1,
+    },
+    {
+      titulo: "Aprendendo Partials 2",
+      categoria: "Partials 2",
+      body: "Este artigo te ensina o Partials 2",
+      comentarios: 2,
+    },
+    {
+      titulo: "Aprendendo Partials 3",
+      categoria: "Partials 3",
+      body: "Este artigo te ensina o Partials 3",
+      comentarios: 3,
+    },
+  ];
+
+  res.render("blog", { posts });
 });
 
 // renderizando a view "home"

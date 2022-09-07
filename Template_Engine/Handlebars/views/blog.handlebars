@@ -1,0 +1,9 @@
+<h1>Os posts do Handlebars</h1>
+{{!-- dessa forma o "this" fica disponivel dentro do each
+    por isso se tem acesso dentro do arquivo post.handlebars
+        para ser renderizado --}}
+{{#each posts}}
+    {{> post}}
+{{/each}}
+
+<a href="/">Voltar</a>
