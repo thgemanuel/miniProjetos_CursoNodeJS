@@ -48,6 +48,13 @@ app.get("/", (req, res) => {
   res.sendFile(`${basePath}/index.html`);
 });
 
+// middleware que sera executado se caso tudo
+//     q estiver acima dele nao correspoder ao que o usuario esta requisitando
+//          pagina 404
+app.use(function (req, res, next) {
+  res.status(404).sendFile(`${basePath}/404.html`);
+});
+
 // funcao para executar algo durante execucao do sistema
 app.listen(port, () => {
   console.log(`App na porta ${port}`);
