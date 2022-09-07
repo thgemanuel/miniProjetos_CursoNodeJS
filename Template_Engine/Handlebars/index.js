@@ -10,6 +10,10 @@ app.engine("handlebars", exphbs.engine());
 //instalando handlebars
 app.set("view engine", "handlebars");
 
+app.get("/dashboard", (req, res) => {
+  res.render("dashboard");
+});
+
 // renderizando a view "home"
 app.get("/", (req, res) => {
   // enviando dados para a view
@@ -23,9 +27,14 @@ app.get("/", (req, res) => {
     idade: "20",
   };
 
+  const acesso = "Concedido";
+
+  // criando uma autenticacao para ser usada numa condicional
+  const auth = true;
+
   // caso nao seja usado layout a opacao { layout: false }
   // res.render("home", { layout: false });
-  res.render("home", { user: userName, idade: userAge });
+  res.render("home", { user: userName, idade: userAge, auth, acesso });
 });
 
 app.listen(2000, () => {

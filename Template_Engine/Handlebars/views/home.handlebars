@@ -1,2 +1,14 @@
 <h1>Ola handle!</h1>
-<p>O usuario se chama {{user.nome}} {{user.sobrenome}}, ele possui {{idade.idade}} anos</p>
+<p>O usuario se chama
+  {{user.nome}}
+  {{user.sobrenome}}, ele possui
+  {{idade.idade}}
+  anos</p>
+{{! abrindo condicional }}
+{{#if auth}}
+  <p>
+    Seu acesso foi
+    {{acesso}}
+  </p>
+  <p><a href="/dashboard"> Clique aqui para acessar o dashboard!</a></p>
+{{/if}}
