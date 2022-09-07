@@ -12,9 +12,22 @@ app.set("view engine", "handlebars");
 
 // renderizando a view "home"
 app.get("/", (req, res) => {
-  res.render("home", { layout: false });
+  // enviando dados para a view
+  const userName = {
+    nome: "Thiago",
+    sobrenome: "Emanuel",
+    idade: "20",
+  };
+
+  const userAge = {
+    idade: "20",
+  };
+
+  // caso nao seja usado layout a opacao { layout: false }
+  // res.render("home", { layout: false });
+  res.render("home", { user: userName, idade: userAge });
 });
 
-app.listen(2000, ()=>{
-    console.log("funcionando");
-})
+app.listen(2000, () => {
+  console.log("funcionando");
+});
