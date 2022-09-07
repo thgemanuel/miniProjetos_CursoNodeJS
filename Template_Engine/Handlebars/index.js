@@ -11,7 +11,9 @@ app.engine("handlebars", exphbs.engine());
 app.set("view engine", "handlebars");
 
 app.get("/dashboard", (req, res) => {
-  res.render("dashboard");
+  // estrutura de repeticao
+  const items = ["Item 1", "Item 2", "Item 3"];
+  res.render("dashboard", {items});
 });
 
 // renderizando a view "home"
@@ -35,7 +37,13 @@ app.get("/", (req, res) => {
 
   // caso nao seja usado layout a opacao { layout: false }
   // res.render("home", { layout: false });
-  res.render("home", { user: userName, idade: userAge, auth, acesso, aprovado });
+  res.render("home", {
+    user: userName,
+    idade: userAge,
+    auth,
+    acesso,
+    aprovado,
+  });
 });
 
 app.listen(2000, () => {
