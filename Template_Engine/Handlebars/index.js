@@ -20,6 +20,11 @@ app.engine("handlebars", hbs.engine);
 //instalando handlebars
 app.set("view engine", "handlebars");
 
+// adicionando arquivos staticos(CSS) ao projeto
+// com o reaproveitamento de layout, aplicando o css nele,
+//    todo o projeto tbm fica com o css
+app.use(express.static('public'))
+
 app.get("/dashboard", (req, res) => {
   // estrutura de repeticao
   const items = ["Item 1", "Item 2", "Item 3"];
