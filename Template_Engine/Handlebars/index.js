@@ -13,7 +13,19 @@ app.set("view engine", "handlebars");
 app.get("/dashboard", (req, res) => {
   // estrutura de repeticao
   const items = ["Item 1", "Item 2", "Item 3"];
-  res.render("dashboard", {items});
+  res.render("dashboard", { items });
+});
+
+// pagina para usar o "with" que permite acessar propriedades sem referenciar ao objeto antes
+app.get("/post", (req, res) => {
+  const post = {
+    titulo: "Aprendendo Node.js",
+    categoria: "JS",
+    body: "Este artigo te ensina o Node.js",
+    comentarios: 4,
+  };
+
+  res.render('blogpost', {post})
 });
 
 // renderizando a view "home"
