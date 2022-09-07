@@ -25,27 +25,43 @@ app.set("view engine", "handlebars");
 //    todo o projeto tbm fica com o css
 app.use(express.static('public'))
 
+const produtos = [
+  {
+    id: "1",
+    titulo: "Produto 1",
+    valor: "10",
+  },
+  {
+    id: "2",
+    titulo: "Produto 2",
+    valor: "20",
+  },
+  {
+    id: "3",
+    titulo: "Produto 3",
+    valor: "30",
+  },
+  {
+    id: "4",
+    titulo: "Produto 4",
+    valor: "40",
+  },
+];
+
+app.get("/produto/:id", function (req, res) {
+  const produto = produtos[req.params.id];
+
+  res.render("produto", { produto });
+});
+
 // renderizando a view "home"
 app.get("/", (req, res) => {
-  const produtos = [
-    {
-      titulo: "Produto 1",
-      valor: "10",
-    },
-    {
-      titulo: "Produto 2",
-      valor: "20",
-    },
-    {
-      titulo: "Produto 3",
-      valor: "30",
-    },
-  ];
-
   res.render("home", {
     produtos,
   });
 });
+
+
 
 app.listen(2000, () => {
   console.log("funcionando");

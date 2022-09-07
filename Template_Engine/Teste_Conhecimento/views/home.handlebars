@@ -1,5 +1,7 @@
 <ul>
   {{#each produtos}}
-    <li>ID: - {{produto}}</li>
+    <li>{{this.titulo}}</li>
+    <li>{{this.valor}}</li>
+    <p><a href="/produto/{{this.id}}">Ver mais sobre o produto</a></p>
   {{/each}}
 </ul>
