@@ -20,7 +20,6 @@ app.get("/", (req, res) => {
   const userName = {
     nome: "Thiago",
     sobrenome: "Emanuel",
-    idade: "20",
   };
 
   const userAge = {
@@ -29,12 +28,14 @@ app.get("/", (req, res) => {
 
   const acesso = "Concedido";
 
+  const aprovado = true;
+
   // criando uma autenticacao para ser usada numa condicional
   const auth = true;
 
   // caso nao seja usado layout a opacao { layout: false }
   // res.render("home", { layout: false });
-  res.render("home", { user: userName, idade: userAge, auth, acesso });
+  res.render("home", { user: userName, idade: userAge, auth, acesso, aprovado });
 });
 
 app.listen(2000, () => {
