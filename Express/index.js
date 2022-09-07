@@ -28,6 +28,30 @@ const checkAuth = function (req, res, next) {
 // adicionando middleware na execução
 app.use(checkAuth);
 
+// ler o body que vem da resposta da requisicao
+app.use(express.urlencoded({ extended: true }));
+
+// transformando toda requisicao do body é transformado em um json
+app.use(express.json());
+
+// como a aplicacao é um monolito(back e front juntos), temos uma rota get para apresentar o formulario
+app.get("/users/add", (req, res) => {
+  res.sendFile(`${basePath}/userform.html`);
+});
+
+// acessando a requisicao
+app.post("/users/save", (req, res) => {
+  console.log(req.body);
+  //   { nome: 'Thiago', idade: '30' }
+
+
+  const nome = req.body.nome;
+  const idade = req.body.idade;
+
+  console.log(`${nome} tem ${idade} anos!`);
+
+});
+
 // importante resaltar que toda nova rota criada deve estar acima da rota "/"
 //     pois toda rota inicia com "/", assim tudo acessado iriam cair nela
 app.get("/users/:id", (req, res) => {
