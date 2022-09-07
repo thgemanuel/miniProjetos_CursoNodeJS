@@ -44,12 +44,11 @@ app.post("/users/save", (req, res) => {
   console.log(req.body);
   //   { nome: 'Thiago', idade: '30' }
 
-
   const nome = req.body.nome;
   const idade = req.body.idade;
 
   console.log(`${nome} tem ${idade} anos!`);
-
+  res.sendFile(`${basePath}/userform.html`);
 });
 
 // importante resaltar que toda nova rota criada deve estar acima da rota "/"
