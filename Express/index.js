@@ -15,7 +15,7 @@ const basePath = path.join(__dirname, "templates");
 // criando middleware para autenticar usuario
 const checkAuth = function (req, res, next) {
   req.authStatus = true;
-//   dessa forma é possivel definir limitacoes, direcionar para uma pasta... 
+  //   dessa forma é possivel definir limitacoes, direcionar para uma pasta...
   if (req.authStatus) {
     console.log("Logado!");
     // o next é usado para que a aplicacao va para a proxima etapa, no caso renderizar o html
@@ -27,6 +27,20 @@ const checkAuth = function (req, res, next) {
 
 // adicionando middleware na execução
 app.use(checkAuth);
+
+// importante resaltar que toda nova rota criada deve estar acima da rota "/"
+//     pois toda rota inicia com "/", assim tudo acessado iriam cair nela
+app.get("/users/:id", (req, res) => {
+  //   acessando parametro pela url
+  const id = req.params.id;
+
+  //   leitura da tabela users e resgatar um usuario do banco
+  console.log(`Usuario ${id} resgatado!`);
+  //localhost:2000/users/3
+  //   Usuario 3 resgatado!
+
+  http: res.sendFile(`${basePath}/users.html`);
+});
 
 // criar rota
 // requisicao(req) vem do cliente e a resposta(res) é enviada de volta
