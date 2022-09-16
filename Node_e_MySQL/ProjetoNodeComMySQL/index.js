@@ -67,7 +67,7 @@ app.get("/livros", function (req, res) {
   });
 });
 
-// selecionando dado especifico com o where 
+// selecionando dado especifico com o where
 app.get("/livro/:id", function (req, res) {
   const id = req.params.id;
 
@@ -76,6 +76,7 @@ app.get("/livro/:id", function (req, res) {
   conn.query(query, function (err, data) {
     if (err) {
       console.log(err);
+      return;
     }
 
     // o where nao diz q vira so um registro, ele pode retornar uma lista
@@ -85,6 +86,60 @@ app.get("/livro/:id", function (req, res) {
     console.log(data[0]);
 
     res.render("livro", { livro });
+  });
+});
+
+// editando dado
+app.get("/livro/editar/:id", function (req, res) {
+  const id = req.params.id;
+
+  const query = `SELECT * FROM livros WHERE id = ${id}`;
+
+  conn.query(query, function (err, data) {
+    if (err) {
+      console.log(err);
+      return;
+    }
+
+    const livro = data[0];
+
+    // console.log(data[0]);
+
+    res.render("editarlivro", { livro });
+  });
+});
+
+// update livro
+app.post("/livro/updatelivro", function (req, res) {
+  const id = req.body.id;
+  const titulo = req.body.titulo;
+  const qtdpaginas = req.body.qtdpaginas;
+
+  const query = `UPDATE livros SET titulo = '${titulo}', qtdpaginas = ${qtdpaginas} WHERE id = ${id}`;
+
+  conn.query(query, function (err) {
+    if (err) {
+      console.log(err);
+      return;
+    }
+
+    res.redirect(`/livros`);
+  });
+});
+
+// deletar dado
+app.post("/livro/delete/:id", function (req, res) {
+  const id = req.params.id;
+
+  const query = `DELETE FROM livros WHERE id = ${id}`;
+
+  conn.query(query, function (err) {
+    if (err) {
+      console.log(err);
+      return;
+    }
+
+    res.redirect(`/livros`);
   });
 });
 
