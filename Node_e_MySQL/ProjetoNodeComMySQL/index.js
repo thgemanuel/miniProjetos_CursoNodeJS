@@ -50,6 +50,23 @@ app.post("/livros/insertlivros", function (req, res) {
   });
 });
 
+// resgatando todos os dados
+app.get("/livros", function (req, res) {
+  const query = `SELECT * FROM livros`;
+
+  conn.query(query, function (err, data) {
+    if (err) {
+      console.log(err);
+    }
+
+    const livros = data;
+
+    // console.log(data);
+
+    res.render("livros", { livros });
+  });
+});
+
 // conectando ao mySQL, pois a aplicacao so funcionara quando tiver o banco conectado
 // entao é nescessario estabelecer uma conexao a cada iteracao com a aplicacao
 conn.connect(function (err) {

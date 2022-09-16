@@ -1,0 +1,15 @@
+<h1>Livros disponiveis:</h1>
+<div class="livro-container">
+  {{#each livros}}
+    <div>#{{this.id}}
+      -
+      <span class="bold">{{this.titulo}}</span>
+      -
+      {{this.qtdpaginas}}
+      páginas</div>
+  {{/each}}
+</div>
+
+<p>
+  <a href="/">Voltar</a>
+</p>
