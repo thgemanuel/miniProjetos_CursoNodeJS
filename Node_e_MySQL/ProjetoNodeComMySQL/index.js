@@ -67,6 +67,27 @@ app.get("/livros", function (req, res) {
   });
 });
 
+// selecionando dado especifico com o where 
+app.get("/livro/:id", function (req, res) {
+  const id = req.params.id;
+
+  const query = `SELECT * FROM livros WHERE id = ${id}`;
+
+  conn.query(query, function (err, data) {
+    if (err) {
+      console.log(err);
+    }
+
+    // o where nao diz q vira so um registro, ele pode retornar uma lista
+    //     como ele vai retornar so um, entao se acessa pela posicao [0]
+    const livro = data[0];
+
+    console.log(data[0]);
+
+    res.render("livro", { livro });
+  });
+});
+
 // conectando ao mySQL, pois a aplicacao so funcionara quando tiver o banco conectado
 // entao é nescessario estabelecer uma conexao a cada iteracao com a aplicacao
 conn.connect(function (err) {

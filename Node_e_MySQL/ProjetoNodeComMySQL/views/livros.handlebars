@@ -3,7 +3,9 @@
   {{#each livros}}
     <div>#{{this.id}}
       -
-      <span class="bold">{{this.titulo}}</span>
+      <span class="bold"><a
+          href="/livro/{{this.id}}"
+        >{{this.titulo}}</a></span>
       -
       {{this.qtdpaginas}}
       páginas</div>
